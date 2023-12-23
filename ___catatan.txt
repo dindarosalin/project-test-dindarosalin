@@ -3,6 +3,50 @@ element
 https://tailwindcss.com/docs/top-right-bottom-left#placing-a-positioned-element
 
 
+1.  Header
+
+Fixed position, yang ketika user scroll ke bawah, headernya menghilang, namun ketika user scroll ke atas, header muncul kembali dengan background sedikit transparent
+Active state menu sesuai halaman yang sedang dikunjungi
+
+<nav
+  className={`${
+    isScroll ? "h-[60px] lg:-top-[60px] bg-opacity-75" : "h-[80px]"
+  } lg:px-[72px] px-5 w-full z-[10] text-white fixed transition-all duration-300 ease-in-out flex justify-between items-center bg-indigo-600`}
+>
+ 
+
+2.  Banner
+
+Banner terdiri dari sebuah image yang nantinya bisa di-update melalui CMS tanpa perlu edit image tersebut agar terdapat area miring pada bagian bawah banner
+(Plus) Pada saat scroll, ada efek parallax antara image dan text-nya
+ 
+
+3.  List Post
+
+Semua fungsi sort dan show-per-page dapat dijalankan, begitu juga status items yang ditunjukkan dalam satu page tersebut sesuai urutan item-nya
+Pilihan sort yang harus disediakan adalah berdasarkan terbaru dan terlama saja
+Pilihan jumlah item per page yang harus disediakan adalah [10, 20, 50]
+Pada saat melakukan sort, ubah show-per-page dan berpindah halaman dan kemudian halaman di-refresh, data atau state pada halaman itu tidak kembali ke state awal
+Ratio thumbnail harus konsisten di masing-masing cards
+Pastikan menerapkan lazyloading pada image
+Title post pada card dibatasi tingginya maksimal 3 baris, dan gunakanlah ellipsis bila ada title yang lebih dari 3 baris
+ 
+
+4.  API
+
+Lakukan pengaturan proxy agar dapat menggunakan API yang tersedia
+API url : https://suitmedia-backend.suitdev.com/api/ideas
+Params: 
+            page[number]: 1 (visited page),
+
+            page[size]: 10 (item per page),
+
+            append: [‘small_image’, ‘medium_image’],
+
+            sort: ‘published_at’ atau ‘-published_at’
+
+Contoh: https://suitmedia-backend.suitdev.com/api/ideas?page[number]=1&page[size]=10&append[]=small_image&append[]=medium_image&sort=-published_at
+
 
 
 

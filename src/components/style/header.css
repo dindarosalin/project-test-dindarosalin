@@ -1,0 +1,5 @@
+.active {
+    border-bottom: 2px solid white; /* Atur gaya garis bawah sesuai keinginan Anda */
+    color: black;
+    transition: all;
+}

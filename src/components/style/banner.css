@@ -1,0 +1,32 @@
+/* banner.css */
+.banner {
+    position: relative;
+    height: 100vh; /* Sesuaikan tinggi banner sesuai kebutuhan */
+  }
+  
+  .banner img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out; /* Animasi efek parallax */
+  }
+  
+  .banner::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10vh; /* Sesuaikan tinggi efek miring sesuai keinginan */
+    background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+  }
+  
+  .banner .text-content {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+  }
+  
