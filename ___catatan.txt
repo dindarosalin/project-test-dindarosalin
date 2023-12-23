@@ -1,0 +1,46 @@
+element
+<div class="absolute inset-x-0 bottom-0 h-16 ...">08</div>
+https://tailwindcss.com/docs/top-right-bottom-left#placing-a-positioned-element
+
+
+
+
+
+import {AiOutlineClose} from 'react-icons/ai'
+
+const header = () => {
+    return (
+        <>
+            <div className="p-4 lg:p-10 flex items-center justify-between bg-indigo-800 text-white">
+                <div className="text-xl lg:text-3xl">LOGO</div>
+                <div className="space-x-4">
+                    <div className="ssm:hidden lg:block space-x-2">
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >Work</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >About</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >Services</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >Ideas</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >Careers</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"
+                            className="hover:underline"
+                        >Contact</a>
+                    </div>
+                    <div>
+                        <AiOutlineClose/>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default header
