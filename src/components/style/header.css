@@ -1,5 +1,9 @@
 .active {
-    border-bottom: 2px solid white; /* Atur gaya garis bawah sesuai keinginan Anda */
-    color: black;
-    transition: all;
+  border-bottom: 2px solid white; /* Atur gaya garis bawah sesuai keinginan Anda */
+  transition: all 0.3s ease-in-out; /* Tambahkan transisi untuk efek yang lebih halus */
+}
+
+a:hover {
+  border-bottom: 2px solid white; /* Atur gaya garis bawah sesuai keinginan Anda */
+  transition: all 0.3s ease-in-out; /* Tambahkan transisi untuk efek yang lebih halus */
 }

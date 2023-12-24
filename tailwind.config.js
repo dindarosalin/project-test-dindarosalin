@@ -12,7 +12,11 @@ export default {
       lg:'1024px',
       
     },
-    extend: {},
+    extend: {
+      colors: {
+        orange: '#EF6C34'
+      }
+    },
   },
   plugins: [],
 }

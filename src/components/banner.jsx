@@ -18,11 +18,11 @@ const Banner = () => {
     }, []);
 
     return (
-        <div className="relative overflow-hidden banner">
+        <div className="relative overflow-hidden banner mb-4">
             <div className="absolute inset-0 overflow-hidden z-0">
                 <img
                     ref={imageRef}
-                    src='src/asset/darah-rendah.jpeg'
+                    src='darah-rendah.jpeg'
                     alt="Banner Image"
                     className="w-full h-full object-cover"
                 />

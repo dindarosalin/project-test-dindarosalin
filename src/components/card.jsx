@@ -4,10 +4,22 @@ import { fetchIdeas } from "../data/API"; // Ubah lokasi file API.js sesuai deng
 
 const CardComponent = ({ idea }) => {
   return (
-    <div className="border rounded p-4 mb-4">
-      <h2 className="text-xl font-semibold">{idea.title}</h2>
-      <p className="text-gray-600">{idea.content}</p>
-      {/* Tambahkan elemen lain sesuai kebutuhan */}
+    <div className="">
+      <div className="border rounded p-4 mb-4 h-[400px] overflow-hidden">
+        <img
+          src={idea.medium_image} // URL gambar kecil
+          alt={idea.title}
+          loading="lazy"
+          className="w-full h-auto mt-4" // Atur lebar sesuai kebutuhan
+        />
+        <h2 className="text-lg font-semibold h-12 overflow-hidden line-clamp-3">
+          {idea.title}
+        </h2>
+        <div className="text-gray-600 line-clamp-3">
+        {idea.content}
+        </div>
+        {/* Tambahkan elemen lain sesuai kebutuhan */}
+      </div>
     </div>
   );
 };
@@ -18,7 +30,12 @@ const CardList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchIdeas();
+        const data = await fetchIdeas({
+          page: 1,
+          size: 10,
+          append: ["small_image"],
+          sort: "published_at",
+        });
         setIdeas(data?.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -29,13 +46,10 @@ const CardList = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Ideas</h1>
-      <div>
-        {ideas.map((idea) => (
-          <CardComponent key={idea.id} idea={idea} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:px-[72px]">
+      {ideas.map((idea) => (
+        <CardComponent key={idea.id} idea={idea} />
+      ))}
     </div>
   );
 };

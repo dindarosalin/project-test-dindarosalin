@@ -1,6 +1,14 @@
+import Banner from '../components/banner'
+import ListPosts from '../components/list-post'
+
+import CardList from '../components/card'
 const ideas = () => {
   return (
-    <div>ideas</div>
+    <div>
+        <Banner></Banner>
+        <ListPosts></ListPosts>
+        <CardList></CardList>
+    </div>
   )
 }
 
