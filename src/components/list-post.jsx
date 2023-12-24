@@ -2,62 +2,93 @@ import { useState, useEffect } from 'react';
 import { fetchPosts } from '../data/API'; // Import fetchPosts function
 
 const ListPost = () => {
-  const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]); 
+  const [displayedPosts, setDisplayedPosts] = useState([]); 
   const [sortBy, setSortBy] = useState('published_at');
-  const [perPage, setPerPage] = useState(() => {
-    const savedPerPage = parseInt(localStorage.getItem('perPage')) || 10;
-    return savedPerPage;
-  });
+  const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-    setCurrentPage(1); // Reset to first page when changing sorting
-  };
-
-  const handlePerPageChange = (e) => {
-    const newPerPage = parseInt(e.target.value);
-    setPerPage(newPerPage);
-    setCurrentPage(1); // Reset to first page when changing items per page
-    localStorage.setItem('perPage', newPerPage);
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const fetchPostsData = async (page, perPage, sortBy) => {
-    try {
-      const data = await fetchPosts(page, perPage, sortBy);
-      if (data) {
-        setPosts(data); // Set fetched posts to state
-        setTotalPages(data.meta.total_pages || 0); // Set total pages
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllPosts = async () => {
       try {
-        const data = await fetchPosts(currentPage, perPage, sortBy);
-        setPosts(data); // Set fetched posts to state
-        if (data.meta && data.meta.total_pages) {
-          setTotalPages(data.meta.total_pages); // Set total pages
-        } else {
-          setTotalPages(0); // Set total pages to 0 or any default value
+        const allData = await fetchPosts(1, 100); 
+        if (allData && allData.length > 0) {
+          setAllPosts(allData); 
+          setDisplayedPosts(allData.slice(0, perPage)); 
+          setTotalPages(Math.ceil(allData.length / perPage)); 
         }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-    
-    fetchData(); // Move fetchData here for initial render
 
-    fetchPostsData(currentPage, perPage, sortBy); // Move fetchPostsData here
-  }, [currentPage, perPage, sortBy]);
+    // Mendapatkan nilai dari localStorage saat komponen dimuat
+    const savedPerPage = localStorage.getItem('perPage');
+    const savedSortBy = localStorage.getItem('sortBy');
+
+    if (savedPerPage) {
+      setPerPage(parseInt(savedPerPage));
+    }
+
+    if (savedSortBy) {
+      setSortBy(savedSortBy);
+    }
+
+    fetchAllPosts();
+  }, [perPage]); 
+
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        const allData = await fetchPosts(1, 100, sortBy); // Menggunakan sortBy dari state
+        if (allData && allData.length > 0) {
+          setAllPosts(allData); 
+          setDisplayedPosts(allData.slice(0, perPage)); 
+          setTotalPages(Math.ceil(allData.length / perPage)); 
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchAllPosts();
+  }, [perPage, sortBy]); 
+
+  const handlePageChange = (page) => {
+    const startIndex = (page - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    setDisplayedPosts(allPosts.slice(startIndex, endIndex)); 
+    setCurrentPage(page); 
+  };
+
+  const handleSortChange = (e) => {
+    const selectedSort = e.target.value;
+  
+    // Mengatur nilai sortBy sesuai pilihan pengguna
+    if (selectedSort === 'published_at') {
+      setSortBy('published_at');
+    } else if (selectedSort === '-published_at') {
+      setSortBy('-published_at');
+    }
+    
+    // Menyimpan preferensi sorting ke localStorage
+    localStorage.setItem('sortBy', selectedSort);
+  };
+  
+
+  const handlePerPageChange = (e) => {
+    const newPerPage = parseInt(e.target.value);
+    setPerPage(newPerPage);
+
+    setTotalPages(Math.ceil(allPosts.length / newPerPage)); 
+    setCurrentPage(1); 
+    setDisplayedPosts(allPosts.slice(0, newPerPage)); 
+
+    // Menyimpan preferensi jumlah data per halaman ke localStorage
+    localStorage.setItem('perPage', newPerPage);
+  };
+
 
   return (
     <div className="container mx-auto mt-8">
@@ -92,10 +123,11 @@ const ListPost = () => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {posts.map((post) => (
-          <div key={post.id} className="bg-white p-4 rounded shadow">
-            {post.medium_image && post.medium_image.length > 0 && post.medium_image[0].url && (
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {displayedPosts.map((post) => (
+          <div key={post.id} className="bg-white p-2 rounded shadow">
+            {post.medium_image && post.medium_image[0] && post.medium_image[0].url && (
               <img
                 src={post.medium_image[0].url}
                 alt="Thumbnail"
@@ -112,19 +144,18 @@ const ListPost = () => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center mt-4">
-        {/* Pagination */}
+
+      <div className="flex justify-center mt-4 m-4">
         {totalPages > 1 && (
           <div className="flex justify-center mt-4">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {[...Array(totalPages)].map((_, i) => (
               <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`mx-1 px-3 py-1 rounded ${
-                  currentPage === page ? 'bg-orange text-white' : 'bg-gray-200 text-black'
-                }`}
+                key={i + 1}
+                onClick={() => handlePageChange(i + 1)}
+                className={`mx-1 px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-orange text-white' : 'bg-gray-200 text-black'
+                  }`}
               >
-                {page}
+                {i + 1}
               </button>
             ))}
           </div>

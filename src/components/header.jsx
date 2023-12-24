@@ -39,13 +39,12 @@ const Header = () => {
     <nav
       className={classNames({
         'h-[4rem] lg:px-[72px] px-5 w-full z-[10] text-white fixed transition-all duration-300 ease-in-out flex justify-between items-center bg-orange': !isScroll,
-        'h-[60px] lg:-top-[60px] fixed': isScroll,
         'bg-orange bg-opacity-75': window.scrollY > 0 && window.scrollY > window.innerHeight,
         'bg-orange': window.scrollY >= window.innerHeight,
       })}
     >
       <Link to='/' onClick={() => setNav('/')}>
-        <img src="download.png" alt="" className="h-[2rem]"/>
+        <img src="unnamed.png" alt="" className="h-[4rem]"/>
       </Link>
       <div className="flex items-center gap-x-3 md:hidden">
         <FiMenu size={24} onClick={() => setNav((prev) => !prev)} className="block" />
