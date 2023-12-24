@@ -1,42 +1,23 @@
-const BASE_URL = "https://suitmedia-backend.suitdev.com/api";
+const BASE_URL = 'https://suitmedia-backend.suitdev.com/api/ideas';
 
-export const fetchIdeas = async () => {
+const fetchPosts = async (page = 1, perPage = 10, sortBy = 'published_at') => {
+  const apiUrl = `${BASE_URL}?page[number]=${page}&page[size]=${perPage}&append[]=small_image&append[]=medium_image&sort=${sortBy}`;
   try {
-    const response = await fetch(`${BASE_URL}/ideas`, {
+    const response = await fetch(apiUrl, {
       headers: {
-        Accept: "application/json",
+        Accept: 'application/json',
       },
     });
     if (!response.ok) {
-      throw new Error("Failed to fetch ideas");
+      throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    return data;
+    return data.data;
   } catch (error) {
-    // Handle errors here
-    console.error("Error fetching ideas:", error);
-    return null;
+    console.error('Error fetching data:', error);
+    return [];
   }
 };
 
-export const fetchPosts = async (pageNumber = 1, pageSize = 10) => {
-  const queryParams = `page[number]=${pageNumber}&page[size]=${pageSize}&append[]=small_image&append[]=medium_image&sort=-published_at`;
 
-  try {
-    const response = await fetch(`${BASE_URL}/ideas?${queryParams}`, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch posts");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    return null;
-  }
-};
+export { fetchPosts };

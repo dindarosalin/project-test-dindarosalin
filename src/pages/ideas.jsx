@@ -1,13 +1,11 @@
 import Banner from '../components/banner'
-import ListPosts from '../components/list-post'
+import ListPost from '../components/list-post'
 
-import CardList from '../components/card'
 const ideas = () => {
   return (
     <div>
-        <Banner></Banner>
-        <ListPosts></ListPosts>
-        <CardList></CardList>
+      <Banner></Banner>
+      <ListPost></ListPost>
     </div>
   )
 }
