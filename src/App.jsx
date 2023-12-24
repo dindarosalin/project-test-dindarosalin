@@ -2,11 +2,11 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Home from "./pages/home";
-import About from './pages/About';
-import Careers from './pages/Careers';
-import Ideas from './pages/Ideas';
-import Services from './pages/Services';
-import Work from './pages/Work';
+import About from './pages/about';
+import Careers from './pages/careers';
+import Ideas from './pages/ideas';
+import Services from './pages/services';
+import Work from './pages/work';
 
 function App() {
   return (
