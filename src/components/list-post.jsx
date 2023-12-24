@@ -27,6 +27,14 @@ const ListPost = () => {
     setCurrentPage(page);
   };
 
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -97,11 +105,18 @@ const ListPost = () => {
           </div>
         ))}
       </div>
-      <div className='flex justify-center mt-4'>
+      <div className="flex justify-center mt-4">
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-4">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <div className="flex">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="mx-1 px-3 py-1 rounded bg-blue-500 text-white"
+            >
+              Prev
+            </button>
+            {getPageNumbers().map((page) => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
@@ -111,6 +126,13 @@ const ListPost = () => {
                 {page}
               </button>
             ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="mx-1 px-3 py-1 rounded bg-blue-500 text-white"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
