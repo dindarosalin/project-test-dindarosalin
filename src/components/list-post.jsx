@@ -27,12 +27,16 @@ const ListPost = () => {
     setCurrentPage(page);
   };
 
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
+  const fetchPostsData = async (page, perPage, sortBy) => {
+    try {
+      const data = await fetchPosts(page, perPage, sortBy);
+      if (data) {
+        setPosts(data); // Set fetched posts to state
+        setTotalPages(data.meta.total_pages || 0); // Set total pages
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-    return pageNumbers;
   };
 
   useEffect(() => {
@@ -49,7 +53,10 @@ const ListPost = () => {
         console.error('Error fetching data:', error);
       }
     };
-    fetchData();
+    
+    fetchData(); // Move fetchData here for initial render
+
+    fetchPostsData(currentPage, perPage, sortBy); // Move fetchPostsData here
   }, [currentPage, perPage, sortBy]);
 
   return (
@@ -61,7 +68,7 @@ const ListPost = () => {
           </label>
           <select
             id="sort"
-            className="border p-2 rounded"
+            className="border p-2 rounded-full"
             value={sortBy}
             onChange={handleSortChange}
           >
@@ -75,7 +82,7 @@ const ListPost = () => {
           </label>
           <select
             id="perPage"
-            className="border p-2 rounded"
+            className="border p-2 rounded-full"
             value={perPage}
             onChange={handlePerPageChange}
           >
@@ -108,31 +115,18 @@ const ListPost = () => {
       <div className="flex justify-center mt-4">
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="mx-1 px-3 py-1 rounded bg-blue-500 text-white"
-            >
-              Prev
-            </button>
-            {getPageNumbers().map((page) => (
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`mx-1 px-3 py-1 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                  }`}
+                className={`mx-1 px-3 py-1 rounded ${
+                  currentPage === page ? 'bg-orange text-white' : 'bg-gray-200 text-black'
+                }`}
               >
                 {page}
               </button>
             ))}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="mx-1 px-3 py-1 rounded bg-blue-500 text-white"
-            >
-              Next
-            </button>
           </div>
         )}
       </div>
