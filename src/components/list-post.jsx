@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { fetchPosts } from '../data/API'; // Import fetchPosts function
 
@@ -11,19 +10,6 @@ const ListPost = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchPosts(currentPage, perPage, sortBy);
-        setPosts(data); // Set fetched posts to state
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [currentPage, perPage, sortBy]);
 
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
@@ -40,6 +26,23 @@ const ListPost = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchPosts(currentPage, perPage, sortBy);
+        setPosts(data); // Set fetched posts to state
+        if (data.meta && data.meta.total_pages) {
+          setTotalPages(data.meta.total_pages); // Set total pages
+        } else {
+          setTotalPages(0); // Set total pages to 0 or any default value
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, [currentPage, perPage, sortBy]);
 
   return (
     <div className="container mx-auto mt-8">
@@ -77,35 +80,39 @@ const ListPost = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {posts.map((post) => (
           <div key={post.id} className="bg-white p-4 rounded shadow">
-            <img
-              src={post.small_image}
-              alt="Thumbnail"
-              className="w-full h-40 object-cover mb-2"
-              loading="lazy"
-            />
+            {post.medium_image && post.medium_image.length > 0 && post.medium_image[0].url && (
+              <img
+                src={post.medium_image[0].url}
+                alt="Thumbnail"
+                className="w-full h-64 object-cover mb-2"
+                loading="lazy"
+              />
+            )}
             <p className='text-lg font-small text-gray-600'>
               {post.published_at}
             </p>
             <h3 className="text-lg font-medium text-gray-800 truncate-3-lines">
               {post.title}
             </h3>
-            {/* Display other post information */}
           </div>
         ))}
       </div>
-      {/* Pagination */}
-      {/* Implement pagination component or logic here */}
-      <div className="flex justify-center mt-4">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-              }`}
-          >
-            {page}
-          </button>
-        ))}
+      <div className='flex justify-center mt-4'>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`mx-1 px-3 py-1 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                  }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
