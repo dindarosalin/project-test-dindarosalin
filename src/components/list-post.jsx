@@ -92,7 +92,7 @@ const ListPost = () => {
 
   return (
     <div className="container mx-auto mt-8">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 m-4">
         <div>
           <label htmlFor="sort" className="mr-2">
             Sort By:
@@ -124,7 +124,7 @@ const ListPost = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 m-4">
         {displayedPosts.map((post) => (
           <div key={post.id} className="bg-white p-2 rounded shadow">
             {post.medium_image && post.medium_image[0] && post.medium_image[0].url && (
